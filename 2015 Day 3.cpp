@@ -123,17 +123,3 @@ int main()
 	cout << "Unique houses visited (houses that received at least 1 gift): " << posTracker.size() << std::endl;
 	cout << "Total gifts delivered: " << presentsDelivered << std::endl;
 }
-
-/*
-* Create a sorting class...
-* 
-* Tracking for X, Y pos
-* Tracking for whether a location has been visited
-* 
-*/
-class House {
-	int xPos;
-	int yPos;
-	int timesVisited;
-
-};
