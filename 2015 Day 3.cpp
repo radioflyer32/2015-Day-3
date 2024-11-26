@@ -27,12 +27,20 @@ using std::cin;
 
 int main()
 {
+	// Santa coordinates
 	int xPos;
 	int yPos;
+	// Bot coordinates
+	int xBot;
+	int yBot;
+
 	char newHeading;
 	int presentsDelivered = 0;
 	std::vector<std::string> posTracker; //tracks unique x,y coordinates
 	std::vector<int> visitsTracker; //tracks number of visits to a coordinate
+	std::string currentCoords;
+
+	std::string santaOrBot = "Santa"; // switch between Santa, and Bot
 
 	/*
 	* Open text file
@@ -51,7 +59,9 @@ int main()
 	*/
 	xPos = 0;
 	yPos = 0;
-	presentsDelivered += 1;
+	xBot = 0;
+	yBot = 0;
+	presentsDelivered += 2;
 	posTracker.push_back("0, 0");
 	visitsTracker.push_back(1);
 
@@ -63,34 +73,72 @@ int main()
 	
 	// While loop to get each character in the text file
 	while (inputFile.get(newHeading)) {
-		if (newHeading == '^') {
-			// go North... y+=1
-			yPos += 1;
-		}
-		else if (newHeading == '>') {
-			// go East... x+=1
-			xPos += 1;
-		}
-		else if (newHeading == 'v') {
-			// go South... y-=1
-			yPos -= 1;
-		}
-		else if (newHeading == '<') {
-			// go West... x-=1
-			xPos -= 1;
+		if (santaOrBot == "Santa") {
+			santaOrBot = "Bot";
+			if (newHeading == '^') {
+				// go North... y+=1
+				yPos += 1;
+			}
+			else if (newHeading == '>') {
+				// go East... x+=1
+				xPos += 1;
+			}
+			else if (newHeading == 'v') {
+				// go South... y-=1
+				yPos -= 1;
+			}
+			else if (newHeading == '<') {
+				// go West... x-=1
+				xPos -= 1;
+			}
+			else {
+				// Something has gone wrong...
+				std::cerr << "Something has gone wrong pulling characters from the file... " << std::endl << "######## Bad char: " << newHeading << std::endl;
+				exit(1);
+			}
+
+			std::string xStr = std::to_string(xPos);
+			std::string yStr = std::to_string(yPos);
+			currentCoords = xStr + ", " + yStr;
 		}
 		else {
-			// Something has gone wrong...
-			std::cerr << "Something has gone wrong pulling characters from the file... " << std::endl << "######## Bad char: " << newHeading << std::endl;
-			exit(1);
+			santaOrBot = "Santa";
+			if (newHeading == '^') {
+				// go North... y+=1
+				yBot += 1;
+			}
+			else if (newHeading == '>') {
+				// go East... x+=1
+				xBot += 1;
+			}
+			else if (newHeading == 'v') {
+				// go South... y-=1
+				yBot -= 1;
+			}
+			else if (newHeading == '<') {
+				// go West... x-=1
+				xBot -= 1;
+			}
+			else {
+				// Something has gone wrong...
+				std::cerr << "Something has gone wrong pulling characters from the file... " << std::endl << "######## Bad char: " << newHeading << std::endl;
+				exit(1);
+			}
+
+			std::string xStr = std::to_string(xBot);
+			std::string yStr = std::to_string(yBot);
+			currentCoords = xStr + ", " + yStr;
+		}
+
+		if (santaOrBot == "Santa") {
+			cout << "Bot moved: " << newHeading << std::endl;
+		}
+		else {
+			cout << "Santa moved: " << newHeading << std::endl;
 		}
 
 		presentsDelivered += 1;
 
-		std::string xStr = std::to_string(xPos);
-		std::string yStr = std::to_string(yPos);
-
-		std::string currentCoords = xStr + ", " + yStr;
 		//cout << "Current coordinates in vector: " << currentCoords << std::endl;
 
 		// Reset coordsExist to false for next check
@@ -117,6 +165,8 @@ int main()
 
 			cout << "New coordinate: " << currentCoords << std::endl;
 		}
+
+		cout << "Current unique visits: " << posTracker.size() << std::endl << std:: endl;
 	}
 
 	// output unique houses delivered to
